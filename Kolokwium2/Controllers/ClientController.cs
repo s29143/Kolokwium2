@@ -1,3 +1,4 @@
+using Kolokwium2.DTOs;
 using Kolokwium2.Exceptions;
 using Kolokwium2.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +17,7 @@ public class ClientController : ControllerBase
     }
 
     [Route("/api/[controller]/{idClient}")]
+    [HttpGet]
     public async Task<IActionResult> GetClient([FromRoute] int idClient)
     {
         try
@@ -26,6 +28,25 @@ public class ClientController : ControllerBase
         catch (NotFoundException e)
         {
             return NotFound(e.Message);
+        }
+    }
+    [Route("/api/[controller]/{idClient}/subscription/{idSubscription}")]
+    [HttpPost]
+    public async Task<IActionResult> PayForSubscription([FromRoute] int idClient,
+        [FromRoute] int idSubscription, [FromBody] PaymentDTO dto)
+    {
+        try
+        {
+            var paymentSuccessful = await _clientService.PayForSubscription(idClient, idSubscription, dto);
+            return Ok(paymentSuccessful);
+        }
+        catch (NotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+        catch (ConflictException e)
+        {
+            return Conflict(e.Message);
         }
     }
 }
