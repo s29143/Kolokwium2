@@ -1,4 +1,6 @@
 using Kolokwium2.Contexts;
+using Kolokwium2.Models;
+using Kolokwium2.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IClientService, ClientService>();
 
 var app = builder.Build();
 builder.Services.AddDbContext<ApbdContext>(opt =>
