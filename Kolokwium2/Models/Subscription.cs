@@ -16,5 +16,4 @@ public class Subscription
     public virtual ICollection<Sale> Sales { get; set; } = new List<Sale>();
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
     public virtual ICollection<Discount> Discounts { get; set; } = new List<Discount>();
-
 }

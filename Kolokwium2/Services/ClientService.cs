@@ -24,14 +24,19 @@ public class ClientService : IClientService
     public async Task<ClientDTO> GetById(int idClient)
     {
         var client = await _context.Clients.Where(c => c.IdClient == idClient)
-            .Include(c => c.Payments)
+            .Include(c => c.Sales)
             .Select(c => new ClientDTO()
             {
                 FirstName = c.FirstName,
                 LastName = c.LastName,
                 Email = c.Email,
                 Phone = c.Phone,
-                Subscriptions = new List<SubscriptionDTO>()
+                Subscriptions = c.Sales.Select(sale => new SubscriptionDTO()
+                {
+                    IdSubscription = sale.IdSubscriptionNavigation.IdSubscription,
+                    Name = sale.IdSubscriptionNavigation.Name,
+                    TotalPaidAmount = sale.IdSubscriptionNavigation.Price * _context.Payments.Count(p => p.IdSubscription == sale.IdSubscription)
+                }).ToList()
             }).FirstOrDefaultAsync();
         if (client is null)
         {
